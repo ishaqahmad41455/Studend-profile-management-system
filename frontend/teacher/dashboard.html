@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - EduManage</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-graduation-cap"></i> EduManage</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="mark-attendance.html"><i class="fas fa-pencil-alt"></i> Mark Attendance</a></li>
+                <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-header">
+                <div>
+                    <h2>Teacher Dashboard</h2>
+                    <p style="color: var(--gray-color);">Overview for teachers</p>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar" id="teacherAvatar">T</div>
+                    <div>
+                        <strong id="teacherName">Teacher</strong>
+                        <p style="color: var(--gray-color); font-size: 0.875rem;">Teacher</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i class="fas fa-school"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalClasses">0</h3>
+                        <p>Classes</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fas fa-book"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalSubjects">0</h3>
+                        <p>Subjects</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalStudents">0</h3>
+                        <p>Students</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon red"><i class="fas fa-calendar-check"></i></div>
+                    <div class="stat-info">
+                        <h3 id="todayAttendance">0</h3>
+                        <p>Attendance Today</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Quick Actions</h3>
+                </div>
+                <div style="padding: 1.5rem; display: grid; gap: 1rem;">
+                    <a href="mark-attendance.html" class="btn btn-primary" style="width: fit-content;"><i class="fas fa-pen"></i> Mark Attendance</a>
+                    <a href="../reports/monthly-report.html" class="btn btn-outline" style="width: fit-content;"><i class="fas fa-chart-bar"></i> View Reports</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        async function loadTeacherDashboard() {
+            const user = auth.getUser();
+            if (user) {
+                document.getElementById('teacherName').textContent = user.name;
+                document.getElementById('teacherAvatar').textContent = user.name.charAt(0);
+            }
+
+            try {
+                const [classesRes, subjectsRes, studentsRes] = await Promise.all([
+                    api.get('/classes'),
+                    api.get('/subjects'),
+                    api.get('/students')
+                ]);
+                if (classesRes.success) {
+                    document.getElementById('totalClasses').textContent = classesRes.count;
+                }
+                if (subjectsRes.success) {
+                    document.getElementById('totalSubjects').textContent = subjectsRes.count;
+                }
+                if (studentsRes.success) {
+                    document.getElementById('totalStudents').textContent = studentsRes.count;
+                }
+
+                const today = new Date().toISOString().split('T')[0];
+                const attendanceRes = await api.get(`/attendance?date=${today}`);
+                if (attendanceRes.success) {
+                    document.getElementById('todayAttendance').textContent = attendanceRes.count;
+                }
+            } catch (error) {
+                console.error('Teacher dashboard load error', error);
+                showToast('Unable to load teacher dashboard', 'error');
+            }
+        }
+
+        loadTeacherDashboard();
+    </script>
+</body>
+</html>
