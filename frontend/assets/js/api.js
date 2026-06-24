@@ -112,7 +112,7 @@ function showToast(message, type = 'success') {
         path.includes('/teacher/') ||
         (path.includes('/student/') && !isStudentRegister);
 
-    if (needsAuth) {
-        auth.checkAuth();
-    }
+    // if (needsAuth) {
+    //     auth.checkAuth();
+    // }
 })();
