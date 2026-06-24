@@ -14,10 +14,10 @@ app.use(express.json());
 // Routes
 app.use('/api/auth',       require('./routes/auth'));
 app.use('/api/students',   require('./routes/students'));
-// app.use('/api/classes',    require('./routes/classes'));
-// app.use('/api/subjects',   require('./routes/subjects'));
-// app.use('/api/attendance', require('./routes/attendance'));
-// app.use('/api/reports',    require('./routes/reports'));
+app.use('/api/classes',    require('./routes/classes'));
+app.use('/api/subjects',   require('./routes/subjects'));
+app.use('/api/attendance', require('./routes/attendance'));
+app.use('/api/reports',    require('./routes/reports'));
 app.use('/api/profiles',   require('./routes/profiles'));
 
 
