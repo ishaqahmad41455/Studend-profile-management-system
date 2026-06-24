@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students - Admin Panel</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-graduation-cap"></i> EduManage</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="student-list.html" class="active"><i class="fas fa-users"></i> Students</a></li>
+                <li><a href="manage-teachers.html"><i class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
+                <li><a href="manage-classes.html"><i class="fas fa-school"></i> Classes</a></li>
+                <li><a href="manage-subjects.html"><i class="fas fa-book"></i> Subjects</a></li>
+                <li><a href="../reports/monthly-report.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-header">
+                <div>
+                    <h2>Student List</h2>
+                    <p style="color: var(--gray-color);">Add, update, and remove students</p>
+                </div>
+                <button class="btn btn-primary" onclick="openAddStudentModal()">
+                    <i class="fas fa-plus"></i> Add Student
+                </button>
+            </div>
+
+            <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem; box-shadow: var(--card-shadow);">
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search students..." onkeyup="searchStudents()" />
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <select id="classFilter" class="form-control" onchange="filterStudents()">
+                            <option value="">All Classes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Roll Number</th>
+                                <th>Class</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <tr><td colspan="6"><div class="spinner"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="studentModalTitle">Add New Student</h3>
+                <button class="close-btn" onclick="closeStudentModal()">&times;</button>
+            </div>
+            <form id="studentForm">
+                <input type="hidden" id="studentId">
+                <div class="form-group">
+                    <label for="studentName">Full Name</label>
+                    <input type="text" id="studentName" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="studentEmail">Email</label>
+                    <input type="email" id="studentEmail" class="form-control" required />
+                </div>
+                <div class="form-group" id="passwordGroup">
+                    <label for="studentPassword">Password</label>
+                    <input type="password" id="studentPassword" class="form-control" minlength="6" placeholder="Create password" />
+                </div>
+                <div class="form-group">
+                    <label for="studentRoll">Roll Number</label>
+                    <input type="text" id="studentRoll" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="studentClass">Class</label>
+                    <select id="studentClass" class="form-control" required>
+                        <option value="">Select Class</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="studentPhone">Phone</label>
+                    <input type="tel" id="studentPhone" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="studentAddress">Address</label>
+                    <textarea id="studentAddress" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="studentParentName">Parent/Guardian Name</label>
+                    <input type="text" id="studentParentName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="studentParentPhone">Parent/Guardian Phone</label>
+                    <input type="tel" id="studentParentPhone" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="studentDob">Date of Birth</label>
+                    <input type="date" id="studentDob" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="studentGender">Gender</label>
+                    <select id="studentGender" class="form-control">
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-save"></i> Save Student
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        let students = [];
+        let classes = [];
+
+        async function loadStudents() {
+            try {
+                const [studentsRes, classesRes] = await Promise.all([
+                    api.get('/students'),
+                    api.get('/classes')
+                ]);
+
+                if (studentsRes.success) {
+                    students = studentsRes.data;
+                    renderStudents(students);
+                }
+                if (classesRes.success) {
+                    classes = classesRes.data;
+                    renderClassFilter(classes);
+                    renderClassOptions(classes);
+                }
+            } catch (error) {
+                console.error('Cannot load students', error);
+                showToast('Unable to load students', 'error');
+            }
+        }
+
+        function renderClassFilter(data) {
+            const filter = document.getElementById('classFilter');
+            filter.innerHTML = '<option value="">All Classes</option>' + data.map(cls => `
+                <option value="${cls._id}">${cls.name}${cls.section ? ' ' + cls.section : ''}</option>
+            `).join('');
+        }
+
+        function renderClassOptions(data) {
+            const select = document.getElementById('studentClass');
+            select.innerHTML = '<option value="">Select Class</option>' + data.map(cls => `
+                <option value="${cls._id}">${cls.name}${cls.section ? ' ' + cls.section : ''}</option>
+            `).join('');
+        }
+
+        function renderStudents(data) {
+            const tbody = document.getElementById('studentsTableBody');
+            if (!data.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">No students found.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(student => `
+                <tr>
+                    <td>${student.user?.name || 'N/A'}</td>
+                    <td>${student.rollNumber}</td>
+                    <td>${student.class?.name || 'N/A'}</td>
+                    <td>${student.user?.email || 'N/A'}</td>
+                    <td>${student.parentPhone || '-'}</td>
+                    <td>
+                        <button class="btn btn-outline btn-sm" onclick="editStudent('${student._id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteStudent('${student._id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openAddStudentModal() {
+            document.getElementById('studentModalTitle').textContent = 'Add New Student';
+            document.getElementById('studentForm').reset();
+            document.getElementById('studentId').value = '';
+            document.getElementById('passwordGroup').style.display = 'block';
+            document.getElementById('studentModal').classList.add('show');
+        }
+
+        function closeStudentModal() {
+            document.getElementById('studentModal').classList.remove('show');
+        }
+
+        function editStudent(id) {
+            const student = students.find(item => item._id === id);
+            if (!student) return;
+
+            document.getElementById('studentModalTitle').textContent = 'Edit Student';
+            document.getElementById('studentId').value = student._id;
+            document.getElementById('studentName').value = student.user?.name || '';
+            document.getElementById('studentEmail').value = student.user?.email || '';
+            document.getElementById('studentRoll').value = student.rollNumber || '';
+            document.getElementById('studentClass').value = student.class?._id || '';
+            document.getElementById('studentPhone').value = student.parentPhone || '';
+            document.getElementById('studentAddress').value = student.address || '';
+            document.getElementById('studentParentName').value = student.parentName || '';
+            document.getElementById('studentParentPhone').value = student.parentPhone || '';
+            document.getElementById('studentDob').value = student.dateOfBirth ? new Date(student.dateOfBirth).toISOString().split('T')[0] : '';
+            document.getElementById('studentGender').value = student.gender || '';
+            document.getElementById('passwordGroup').style.display = 'none';
+            document.getElementById('studentModal').classList.add('show');
+        }
+
+        async function deleteStudent(id) {
+            if (!confirm('Delete this student?')) return;
+            try {
+                const response = await api.delete(`/students/${id}`);
+                if (response.success) {
+                    showToast('Student deleted successfully', 'success');
+                    loadStudents();
+                } else {
+                    showToast(response.message || 'Unable to delete student', 'error');
+                }
+            } catch (error) {
+                console.error('Delete error', error);
+                showToast('An error occurred while deleting student', 'error');
+            }
+        }
+
+        function getFilteredStudents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const classFilter = document.getElementById('classFilter').value;
+
+            return students.filter(student => {
+                const matchesSearch = [
+                    student.user?.name,
+                    student.user?.email,
+                    student.rollNumber
+                ].some(value => value && value.toLowerCase().includes(searchTerm));
+
+                const matchesClass = !classFilter || student.class?._id === classFilter;
+                return matchesSearch && matchesClass;
+            });
+        }
+
+        function searchStudents() {
+            renderStudents(getFilteredStudents());
+        }
+
+        function filterStudents() {
+            renderStudents(getFilteredStudents());
+        }
+
+        document.getElementById('studentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const studentId = document.getElementById('studentId').value;
+            const payload = {
+                name: document.getElementById('studentName').value,
+                email: document.getElementById('studentEmail').value,
+                rollNumber: document.getElementById('studentRoll').value,
+                classId: document.getElementById('studentClass').value,
+                parentName: document.getElementById('studentParentName').value,
+                parentPhone: document.getElementById('studentParentPhone').value,
+                address: document.getElementById('studentAddress').value,
+                dateOfBirth: document.getElementById('studentDob').value,
+                gender: document.getElementById('studentGender').value
+            };
+
+            try {
+                let response;
+                if (studentId) {
+                    response = await api.put(`/students/${studentId}`, payload);
+                } else {
+                    payload.password = document.getElementById('studentPassword').value;
+                    response = await api.post('/students', payload);
+                }
+
+                if (response.success) {
+                    showToast('Student saved successfully', 'success');
+                    closeStudentModal();
+                    loadStudents();
+                } else {
+                    showToast(response.message || 'Unable to save student', 'error');
+                }
+            } catch (error) {
+                console.error('Student save error', error);
+                showToast('An error occurred while saving student', 'error');
+            }
+        });
+
+        loadStudents();
+    </script>
+</body>
+</html>

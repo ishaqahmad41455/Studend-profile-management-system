@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Teachers - Admin Panel</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-graduation-cap"></i> EduManage</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="student-list.html"><i class="fas fa-users"></i> Students</a></li>
+                <li><a href="manage-teachers.html" class="active"><i class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
+                <li><a href="manage-classes.html"><i class="fas fa-school"></i> Classes</a></li>
+                <li><a href="manage-subjects.html"><i class="fas fa-book"></i> Subjects</a></li>
+                <li><a href="../reports/monthly-report.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-header">
+                <div>
+                    <h2>Manage Teachers</h2>
+                    <p style="color: var(--gray-color);">Add teacher accounts for the system</p>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Create Teacher Account</h3>
+                </div>
+                <div style="padding: 1.5rem;">
+                    <form id="teacherForm">
+                        <div class="form-group">
+                            <label for="teacherName">Full Name</label>
+                            <input type="text" id="teacherName" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="teacherEmail">Email</label>
+                            <input type="email" id="teacherEmail" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="teacherPassword">Password</label>
+                            <input type="password" id="teacherPassword" class="form-control" required minlength="6" />
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-save"></i> Create Teacher
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="table-container" style="margin-top: 1.5rem; padding: 1.5rem;">
+                <p style="color: var(--gray-color);">Teacher listing is not available because the backend does not expose a dedicated <code>/api/teachers</code> route. You can create teacher accounts using the form above, and once the backend has a teacher listing API, this page can display the full list.</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        document.getElementById('teacherForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                name: document.getElementById('teacherName').value,
+                email: document.getElementById('teacherEmail').value,
+                password: document.getElementById('teacherPassword').value,
+                role: 'teacher'
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showToast('Teacher account created successfully', 'success');
+                    document.getElementById('teacherForm').reset();
+                } else {
+                    showToast(data.message || 'Failed to create teacher', 'error');
+                }
+            } catch (error) {
+                console.error('Teacher create error', error);
+                showToast('An error occurred while creating teacher', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

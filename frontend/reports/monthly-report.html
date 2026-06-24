@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Report - EduManage</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-graduation-cap"></i> EduManage</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="../admin/dashboard.html"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</a></li>
+                <li><a href="../student/dashboard.html"><i class="fas fa-home"></i> Student Dashboard</a></li>
+                <li><a href="../teacher/dashboard.html"><i class="fas fa-chalkboard-teacher"></i> Teacher Dashboard</a></li>
+                <li><a href="monthly-report.html" class="active"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-header">
+                <div>
+                    <h2>Monthly Attendance Report</h2>
+                    <p style="color: var(--gray-color);">View attendance summaries by month and class</p>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="form-group">
+                    <label for="reportMonth">Month</label>
+                    <select id="reportMonth" class="form-control" onchange="loadReport()">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reportYear">Year</label>
+                    <input type="number" id="reportYear" class="form-control" value="2025" onchange="loadReport()" />
+                </div>
+                <div class="form-group">
+                    <label for="reportClass">Class</label>
+                    <select id="reportClass" class="form-control" onchange="loadReport()">
+                        <option value="">All Classes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reportSubject">Subject</label>
+                    <select id="reportSubject" class="form-control" onchange="loadReport()">
+                        <option value="">All Subjects</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Roll Number</th>
+                                <th>Present</th>
+                                <th>Absent</th>
+                                <th>Late</th>
+                                <th>Attendance %</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportBody">
+                            <tr><td colspan="6"><div class="spinner"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        let classes = [];
+        let subjects = [];
+
+        async function loadReportData() {
+            try {
+                const [classesRes, subjectsRes] = await Promise.all([
+                    api.get('/classes'),
+                    api.get('/subjects')
+                ]);
+
+                if (classesRes.success) {
+                    classes = classesRes.data;
+                    renderClassFilter(classes);
+                }
+                if (subjectsRes.success) {
+                    subjects = subjectsRes.data;
+                    renderSubjectFilter(subjects);
+                }
+                loadReport();
+            } catch (error) {
+                console.error('Load report data error', error);
+                showToast('Unable to load report data', 'error');
+            }
+        }
+
+        function renderClassFilter(data) {
+            const select = document.getElementById('reportClass');
+            select.innerHTML = '<option value="">All Classes</option>' + data.map(cls => `
+                <option value="${cls._id}">${cls.name}${cls.section ? ' ' + cls.section : ''}</option>
+            `).join('');
+        }
+
+        function renderSubjectFilter(data) {
+            const select = document.getElementById('reportSubject');
+            select.innerHTML = '<option value="">All Subjects</option>' + data.map(subject => `
+                <option value="${subject._id}">${subject.name} (${subject.code})</option>
+            `).join('');
+        }
+
+        async function loadReport() {
+            const month = document.getElementById('reportMonth').value;
+            const year = document.getElementById('reportYear').value;
+            const classId = document.getElementById('reportClass').value;
+            const subjectId = document.getElementById('reportSubject').value;
+
+            const query = new URLSearchParams({ month, year });
+            if (classId) query.set('classId', classId);
+            if (subjectId) query.set('subjectId', subjectId);
+
+            const tbody = document.getElementById('reportBody');
+            tbody.innerHTML = '<tr><td colspan="6"><div class="spinner"></div></td></tr>';
+
+            try {
+                const response = await api.get(`/reports/monthly?${query.toString()}`);
+                if (response.success) {
+                    if (!response.data.length) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No report data found.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = response.data.map(row => `
+                        <tr>
+                            <td>${row.student?.name || 'N/A'}</td>
+                            <td>${row.student?.rollNumber || 'N/A'}</td>
+                            <td>${row.present}</td>
+                            <td>${row.absent}</td>
+                            <td>${row.late}</td>
+                            <td>${row.percentage}%</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    showToast(response.message || 'Unable to load report', 'error');
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">Unable to load report.</td></tr>';
+                }
+            } catch (error) {
+                console.error('Report load error', error);
+                showToast('An error occurred while loading report', 'error');
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">An error occurred.</td></tr>';
+            }
+        }
+
+        document.getElementById('reportYear').value = new Date().getFullYear();
+        loadReportData();
+    </script>
+</body>
+</html>

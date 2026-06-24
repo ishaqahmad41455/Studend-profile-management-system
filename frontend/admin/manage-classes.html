@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Classes - Admin Panel</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-graduation-cap"></i> EduManage</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="student-list.html"><i class="fas fa-users"></i> Students</a></li>
+                <li><a href="manage-teachers.html"><i class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
+                <li><a href="manage-classes.html" class="active"><i class="fas fa-school"></i> Classes</a></li>
+                <li><a href="manage-subjects.html"><i class="fas fa-book"></i> Subjects</a></li>
+                <li><a href="../reports/monthly-report.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-header">
+                <div>
+                    <h2>Manage Classes</h2>
+                    <p style="color: var(--gray-color);">Create and update class sections</p>
+                </div>
+                <button class="btn btn-primary" onclick="openAddClassModal()">
+                    <i class="fas fa-plus"></i> Add Class
+                </button>
+            </div>
+
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Class Name</th>
+                                <th>Section</th>
+                                <th>Academic Year</th>
+                                <th>Teacher</th>
+                                <th>Subjects</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="classesTableBody">
+                            <tr><td colspan="6"><div class="spinner"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="classModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="classModalTitle">Add New Class</h3>
+                <button class="close-btn" onclick="closeClassModal()">&times;</button>
+            </div>
+            <form id="classForm">
+                <input type="hidden" id="classId">
+                <div class="form-group">
+                    <label for="className">Class Name</label>
+                    <input type="text" id="className" class="form-control" required placeholder="Example: 10" />
+                </div>
+                <div class="form-group">
+                    <label for="classSection">Section</label>
+                    <input type="text" id="classSection" class="form-control" required placeholder="Example: A" />
+                </div>
+                <div class="form-group">
+                    <label for="classYear">Academic Year</label>
+                    <input type="text" id="classYear" class="form-control" required placeholder="2025-2026" />
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-save"></i> Save Class
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        let classes = [];
+
+        async function loadClasses() {
+            try {
+                const response = await api.get('/classes');
+                if (response.success) {
+                    classes = response.data;
+                    renderClasses(classes);
+                }
+            } catch (error) {
+                console.error('Cannot load classes', error);
+                showToast('Unable to load classes', 'error');
+            }
+        }
+
+        function renderClasses(data) {
+            const tbody = document.getElementById('classesTableBody');
+            if (!data.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">No classes found.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(classItem => `
+                <tr>
+                    <td>${classItem.name}</td>
+                    <td>${classItem.section || '-'}</td>
+                    <td>${classItem.academicYear || '-'}</td>
+                    <td>${classItem.teacher?.name || 'Unassigned'}</td>
+                    <td>${(classItem.subjects?.length) || 0}</td>
+                    <td>
+                        <button class="btn btn-outline btn-sm" onclick="editClass('${classItem._id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteClass('${classItem._id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openAddClassModal() {
+            document.getElementById('classModalTitle').textContent = 'Add New Class';
+            document.getElementById('classForm').reset();
+            document.getElementById('classId').value = '';
+            document.getElementById('classModal').classList.add('show');
+        }
+
+        function closeClassModal() {
+            document.getElementById('classModal').classList.remove('show');
+        }
+
+        async function editClass(id) {
+            const classItem = classes.find(item => item._id === id);
+            if (!classItem) return;
+
+            document.getElementById('classModalTitle').textContent = 'Edit Class';
+            document.getElementById('classId').value = classItem._id;
+            document.getElementById('className').value = classItem.name || '';
+            document.getElementById('classSection').value = classItem.section || '';
+            document.getElementById('classYear').value = classItem.academicYear || '';
+            document.getElementById('classModal').classList.add('show');
+        }
+
+        document.getElementById('classForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const classId = document.getElementById('classId').value;
+            const payload = {
+                name: document.getElementById('className').value,
+                section: document.getElementById('classSection').value,
+                academicYear: document.getElementById('classYear').value
+            };
+
+            try {
+                let response;
+                if (classId) {
+                    response = await api.put(`/classes/${classId}`, payload);
+                } else {
+                    response = await api.post('/classes', payload);
+                }
+
+                if (response.success) {
+                    showToast('Class saved successfully', 'success');
+                    closeClassModal();
+                    loadClasses();
+                } else {
+                    showToast(response.message || 'Unable to save class', 'error');
+                }
+            } catch (error) {
+                console.error('Class save error', error);
+                showToast('An error occurred while saving class', 'error');
+            }
+        });
+
+        async function deleteClass(id) {
+            if (!confirm('Delete this class?')) return;
+
+            try {
+                const response = await api.delete(`/classes/${id}`);
+                if (response.success) {
+                    showToast('Class deleted successfully', 'success');
+                    loadClasses();
+                } else {
+                    showToast(response.message || 'Unable to delete class', 'error');
+                }
+            } catch (error) {
+                console.error('Delete error', error);
+                showToast('An error occurred while deleting class', 'error');
+            }
+        }
+
+        loadClasses();
+    </script>
+</body>
+</html>

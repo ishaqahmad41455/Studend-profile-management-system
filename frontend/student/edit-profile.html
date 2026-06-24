@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Student Management System</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-graduation-cap"></i> EduManage</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                <li><a href="edit-profile.html" class="active"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h2>Edit Profile</h2>
+            </div>
+
+            <div style="background: white; padding: 2rem; border-radius: 0.5rem; box-shadow: var(--card-shadow);">
+                <div class="text-center mb-2">
+                    <div class="user-avatar" style="width: 100px; height: 100px; font-size: 2.5rem; margin: 0 auto;" id="profileAvatar">
+                        U
+                    </div>
+                    <h3 id="profileName">User Name</h3>
+                    <p style="color: var(--gray-color);">Student</p>
+                </div>
+
+                <form id="profileForm" style="max-width: 600px; margin: 0 auto;">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea id="address" class="form-control" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parentName">Parent/Guardian Name</label>
+                        <input type="text" id="parentName" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parentPhone">Parent/Guardian Phone</label>
+                        <input type="tel" id="parentPhone" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        async function loadProfile() {
+            const user = auth.getUser();
+            if (user) {
+                document.getElementById('profileName').textContent = user.name;
+                document.getElementById('profileAvatar').textContent = user.name.charAt(0);
+            }
+
+            try {
+                const response = await api.get('/profiles');
+                if (response.success) {
+                    const profile = response.data;
+                    document.getElementById('name').value = profile.name || '';
+                    document.getElementById('email').value = profile.email || '';
+                    document.getElementById('phone').value = profile.phone || '';
+                    document.getElementById('address').value = profile.address || '';
+                    document.getElementById('parentName').value = profile.parentName || '';
+                    document.getElementById('parentPhone').value = profile.parentPhone || '';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                parentName: document.getElementById('parentName').value,
+                parentPhone: document.getElementById('parentPhone').value
+            };
+
+            try {
+                const response = await api.put('/profiles', formData);
+                if (response.success) {
+                    showToast('Profile updated successfully!', 'success');
+                } else {
+                    showToast(response.message || 'Failed to update profile', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('An error occurred. Please try again.', 'error');
+            }
+        });
+
+        loadProfile();
+    </script>
+</body>
+</html>

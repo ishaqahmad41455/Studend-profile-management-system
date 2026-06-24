@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Student Management System</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <i class="fas fa-user-plus" style="font-size: 3rem; color: var(--primary-color);"></i>
+                <h2>Student Registration</h2>
+                <p style="color: var(--gray-color);">Create your student account</p>
+            </div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name">
+                        <i class="fas fa-user"></i> Full Name
+                    </label>
+                    <input type="text" id="name" class="form-control" required 
+                           placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <input type="email" id="email" class="form-control" required 
+                           placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="studentId">
+                        <i class="fas fa-id-card"></i> Student ID
+                    </label>
+                    <input type="text" id="studentId" class="form-control" required 
+                           placeholder="Enter student ID">
+                </div>
+
+                <div class="form-group">
+                    <label for="class">
+                        <i class="fas fa-school"></i> Class
+                    </label>
+                    <select id="class" class="form-control" required>
+                        <option value="">Select Class</option>
+                        <option value="10A">Class 10A</option>
+                        <option value="10B">Class 10B</option>
+                        <option value="11A">Class 11A</option>
+                        <option value="11B">Class 11B</option>
+                        <option value="12A">Class 12A</option>
+                        <option value="12B">Class 12B</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">
+                        <i class="fas fa-phone"></i> Phone Number
+                    </label>
+                    <input type="tel" id="phone" class="form-control" required 
+                           placeholder="Enter phone number">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" id="password" class="form-control" required 
+                           placeholder="Create password" minlength="6">
+                    <small class="form-text">Minimum 6 characters</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">
+                        <i class="fas fa-lock"></i> Confirm Password
+                    </label>
+                    <input type="password" id="confirmPassword" class="form-control" required 
+                           placeholder="Confirm password">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+            </form>
+
+            <div class="auth-link">
+                <p>Already have an account? <a href="../auth/login.html">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                studentId: document.getElementById('studentId').value,
+                class: document.getElementById('class').value,
+                phone: document.getElementById('phone').value,
+                password: password
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('Registration successful! Please login.', 'success');
+                    setTimeout(() => {
+                        window.location.href = '../auth/login.html';
+                    }, 2000);
+                } else {
+                    showToast(data.message || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('An error occurred. Please try again.', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

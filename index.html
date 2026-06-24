@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Management System</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    .nav-top {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(15,23,42,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-top-logo { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 700; font-size: 17px; }
+    .nav-top-logo-icon { width: 34px; height: 34px; background: #2563eb; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; color: #fff; }
+    .nav-top-links { display: flex; gap: 10px; }
+    .features-section {
+      background: #f8fafc;
+      padding: 80px 40px;
+      text-align: center;
+    }
+    .features-section h2 { font-size: 30px; font-weight: 700; margin-bottom: 8px; }
+    .features-section p { color: #475569; margin-bottom: 48px; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: left;
+    }
+    .feature-card-icon {
+      width: 44px; height: 44px;
+      border-radius: 8px;
+      background: #dbeafe;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .feature-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .feature-card p  { font-size: 13px; color: #64748b; }
+    footer {
+      background: #0f172a;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Nav -->
+  <nav class="nav-top">
+    <div class="nav-top-logo">
+      <div class="nav-top-logo-icon">S</div>
+      SMS Platform
+    </div>
+    <div class="nav-top-links">
+      <a href="auth/login.html" class="btn btn-secondary btn-sm">Login</a>
+      <a href="student/register.html" class="btn btn-primary btn-sm">Register</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" style="padding-top:100px;">
+    <div class="hero-badge">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="6" fill="#60a5fa"/></svg>
+      Student Management System
+    </div>
+    <h1>Manage Attendance &amp; <span>Student Profiles</span> with Ease</h1>
+    <p>A complete digital platform for administrators, teachers, and students to manage attendance records and academic profiles efficiently.</p>
+    <div class="hero-buttons">
+      <a href="auth/login.html" class="btn btn-primary btn-lg">Get Started</a>
+      <a href="student/register.html" class="btn btn-outline-primary btn-lg" style="color:#fff;border-color:rgba(255,255,255,0.4);">Register as Student</a>
+    </div>
+    <div class="hero-features">
+      <div class="hero-feature">
+        <div class="hero-feature-icon">
+          <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Role-Based Access</h3>
+        <p>Admin, Teacher, Student roles with secure permissions</p>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature-icon">
+          <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h3>Daily Attendance</h3>
+        <p>Mark and track attendance date-wise per class</p>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature-icon">
+          <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3>Monthly Reports</h3>
+        <p>Detailed attendance reports with percentages</p>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature-icon">
+          <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <h3>Student Profiles</h3>
+        <p>Complete academic profile management</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features-section">
+    <h2>Everything You Need</h2>
+    <p>A complete suite of tools for school administration</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Secure Authentication</h3>
+        <p>JWT-based login with bcrypt password hashing and role-based authorization.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <h3>Admin Dashboard</h3>
+        <p>Add and manage teachers, classes, subjects, and student enrollments.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3>Teacher Attendance Marking</h3>
+        <p>Mark present, absent, or late for all students in a class with one click.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3>Real-Time Tracking</h3>
+        <p>Students can instantly view their own attendance records and percentage.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3>Monthly Reports</h3>
+        <p>Generate class-wise and subject-wise monthly attendance reports in seconds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Profile Management</h3>
+        <p>Students manage personal and academic info; admin oversees all profiles.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2026 Student Management System. Built with Node.js, Express, MongoDB &amp; Vanilla JS.
+  </footer>
+</body>
+</html>

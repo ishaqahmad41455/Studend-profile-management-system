@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - EduManage</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-graduation-cap"></i> EduManage</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="student-list.html"><i class="fas fa-users"></i> Students</a></li>
+                <li><a href="manage-teachers.html"><i class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
+                <li><a href="manage-classes.html"><i class="fas fa-school"></i> Classes</a></li>
+                <li><a href="manage-subjects.html"><i class="fas fa-book"></i> Subjects</a></li>
+                <li><a href="../reports/monthly-report.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <div>
+                    <h2>Admin Dashboard</h2>
+                    <p style="color: var(--gray-color);">System Overview</p>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div>
+                        <strong>Admin User</strong>
+                        <p style="color: var(--gray-color); font-size: 0.875rem;">Administrator</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalStudents">1,234</h3>
+                        <p>Total Students</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalTeachers">56</h3>
+                        <p>Total Teachers</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-school"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalClasses">24</h3>
+                        <p>Active Classes</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon red">
+                        <i class="fas fa-calendar-times"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="todayAbsent">45</h3>
+                        <p>Today's Absences</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Recent Registrations</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentStudents">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Today's Attendance Summary</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Class</th>
+                                    <th>Present</th>
+                                    <th>Absent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceSummary">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        async function loadAdminDashboard() {
+            try {
+                const [studentsRes, attendanceRes] = await Promise.all([
+                    api.get('/students'),
+                    api.get('/attendance/summary')
+                ]);
+
+                if (studentsRes.success) {
+                    document.getElementById('totalStudents').textContent = studentsRes.count;
+                    updateRecentStudents(studentsRes.data.slice(0, 5));
+                }
+
+                if (attendanceRes.success) {
+                    updateAttendanceSummary(attendanceRes.data);
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function updateRecentStudents(students) {
+            const tbody = document.getElementById('recentStudents');
+            tbody.innerHTML = students.map(student => `
+                <tr>
+                    <td>${student.name}</td>
+                    <td>${student.class}</td>
+                    <td>${new Date(student.createdAt).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateAttendanceSummary(data) {
+            const tbody = document.getElementById('attendanceSummary');
+            // Update with actual data
+            tbody.innerHTML = `
+                <tr>
+                    <td>Class 10A</td>
+                    <td><span class="badge badge-success">40</span></td>
+                    <td><span class="badge badge-danger">5</span></td>
+                </tr>
+            `;
+        }
+
+        loadAdminDashboard();
+    </script>
+</body>
+</html>
