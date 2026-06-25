@@ -1,99 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Teachers - Admin Panel</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Teachers | SMS</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
 <body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3><i class="fas fa-graduation-cap"></i> EduManage</h3>
-            </div>
-            <ul class="sidebar-menu">
-                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="student-list.html"><i class="fas fa-users"></i> Students</a></li>
-                <li><a href="manage-teachers.html" class="active"><i class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
-                <li><a href="manage-classes.html"><i class="fas fa-school"></i> Classes</a></li>
-                <li><a href="manage-subjects.html"><i class="fas fa-book"></i> Subjects</a></li>
-                <li><a href="../reports/monthly-report.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
-                <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
-        </aside>
+  <div class="app-wrapper">
+    <!-- Sidebar – identical to dashboard -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">S</div>
+        <div class="sidebar-logo-text">SMS Platform <span>Admin Panel</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <div class="nav-section-title">Management</div>
+        <a href="manage-teachers.html" class="nav-link active">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          Teachers
+        </a>
+        <a href="manage-classes.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Classes
+        </a>
+        <a href="manage-subjects.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Subjects
+        </a>
+        <a href="manage-students.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Students
+        </a>
+        <a href="student-list.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Student Profiles
+        </a>
+        <div class="nav-section-title">Reports</div>
+        <a href="../reports/monthly-report.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Monthly Report
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar" id="sidebar-avatar">A</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+            <div class="sidebar-user-role" id="sidebar-user-role">admin</div>
+          </div>
+          <button class="btn-logout" onclick="logout()" title="Logout">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
 
-        <main class="main-content">
-            <div class="dashboard-header">
-                <div>
-                    <h2>Manage Teachers</h2>
-                    <p style="color: var(--gray-color);">Add teacher accounts for the system</p>
-                </div>
-            </div>
+    <!-- Main Content -->
+    <div class="main-content">
+      <header class="top-header">
+        <div>
+          <div class="header-title">Manage Teachers</div>
+          <div class="header-subtitle">Add and manage teacher accounts</div>
+        </div>
+        <div class="header-actions">
+          <!-- Any additional action buttons can go here -->
+        </div>
+      </header>
 
-            <div class="table-container">
-                <div class="table-header">
-                    <h3>Create Teacher Account</h3>
-                </div>
-                <div style="padding: 1.5rem;">
-                    <form id="teacherForm">
-                        <div class="form-group">
-                            <label for="teacherName">Full Name</label>
-                            <input type="text" id="teacherName" class="form-control" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="teacherEmail">Email</label>
-                            <input type="email" id="teacherEmail" class="form-control" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="teacherPassword">Password</label>
-                            <input type="password" id="teacherPassword" class="form-control" required minlength="6" />
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            <i class="fas fa-save"></i> Create Teacher
-                        </button>
-                    </form>
-                </div>
-            </div>
+      <div class="page-content">
+        <div id="alertContainer"></div>
 
-            <div class="table-container" style="margin-top: 1.5rem; padding: 1.5rem;">
-                <p style="color: var(--gray-color);">Teacher listing is not available because the backend does not expose a dedicated <code>/api/teachers</code> route. You can create teacher accounts using the form above, and once the backend has a teacher listing API, this page can display the full list.</p>
+        <!-- Create Teacher Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Create Teacher Account</div>
+              <div class="card-subtitle">Register a new teacher with login credentials</div>
             </div>
-        </main>
+          </div>
+          <form id="teacherForm" style="max-width: 500px;">
+            <div class="form-group">
+              <label class="form-label" for="teacherName">Full Name</label>
+              <input type="text" id="teacherName" class="form-control" placeholder="e.g. John Doe" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="teacherEmail">Email</label>
+              <input type="email" id="teacherEmail" class="form-control" placeholder="teacher@school.com" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="teacherPassword">Password</label>
+              <input type="password" id="teacherPassword" class="form-control" minlength="6" placeholder="Min. 6 characters" required />
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Create Teacher
+            </button>
+          </form>
+        </div>
+
+        <!-- Teacher List Card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Registered Teachers</div>
+              <div class="card-subtitle">List of all teacher accounts</div>
+            </div>
+            <button class="btn btn-sm btn-secondary" onclick="loadTeachers()" title="Refresh list">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Refresh
+            </button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="teachersTableBody">
+                <tr>
+                  <td colspan="4">
+                    <div class="alert alert-info">
+                      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                      Teacher listing requires a <code>/api/teachers</code> endpoint. Once your backend provides it, this table will auto‑populate.
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script src="../assets/js/api.js"></script>
-    <script>
-        document.getElementById('teacherForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const payload = {
-                name: document.getElementById('teacherName').value,
-                email: document.getElementById('teacherEmail').value,
-                password: document.getElementById('teacherPassword').value,
-                role: 'teacher'
-            };
+  <script src="../assets/js/api.js"></script>
+  <script>
+    const api = API;
 
-            try {
-                const response = await fetch('http://localhost:5000/api/auth/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    showToast('Teacher account created successfully', 'success');
-                    document.getElementById('teacherForm').reset();
-                } else {
-                    showToast(data.message || 'Failed to create teacher', 'error');
-                }
-            } catch (error) {
-                console.error('Teacher create error', error);
-                showToast('An error occurred while creating teacher', 'error');
-            }
+    // Populate sidebar user
+    (function () {
+      const user = getUser();
+      if (user) {
+        document.getElementById('sidebar-user-name').textContent = user.name || 'Admin';
+        document.getElementById('sidebar-user-role').textContent = user.role || 'admin';
+        document.getElementById('sidebar-avatar').textContent = (user.name || 'A').charAt(0).toUpperCase();
+      }
+    })();
+
+    // Teacher list loader – uncomment when your API is ready
+    async function loadTeachers() {
+      const tbody = document.getElementById('teachersTableBody');
+      tbody.innerHTML = '<tr><td colspan="4"><div class="loading">Loading teachers...</div></td></tr>';
+
+      /* 
+      // Example real fetch – enable when backend has /api/teachers
+      try {
+        const response = await fetch('/api/teachers', {
+          headers: { 'Authorization': `Bearer ${getToken()}` }
         });
-    </script>
+        const data = await response.json();
+        if (response.ok) {
+          renderTeachers(data.teachers || data.data || []);
+        } else {
+          throw new Error(data.message || 'Failed');
+        }
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="4"><div class="alert alert-info">No teacher data available. <code>/api/teachers</code> not found.</div></td></tr>`;
+      }
+      */
+      // For now, show info message
+      tbody.innerHTML = `<tr><td colspan="4"><div class="alert alert-info">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Teacher listing requires a <code>/api/teachers</code> endpoint. Once your backend provides it, this table will auto‑populate.
+      </div></td></tr>`;
+    }
+
+    function renderTeachers(teacherList) {
+      const tbody = document.getElementById('teachersTableBody');
+      if (!teacherList.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="table-empty">No teachers registered yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = teacherList.map(t => `
+        <tr>
+          <td>${t.name || t.user?.name || 'N/A'}</td>
+          <td>${t.email || t.user?.email || 'N/A'}</td>
+          <td><span class="badge badge-success">Active</span></td>
+          <td>
+            <button class="btn btn-sm btn-danger" onclick="deleteTeacher('${t._id}')" title="Delete">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Create teacher form
+    document.getElementById('teacherForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('teacherName').value.trim(),
+        email: document.getElementById('teacherEmail').value.trim(),
+        password: document.getElementById('teacherPassword').value,
+        role: 'teacher'
+      };
+
+      if (!payload.name || !payload.email || !payload.password) {
+        showAlert('Please fill all fields', 'warning', document.getElementById('alertContainer'));
+        return;
+      }
+      if (payload.password.length < 6) {
+        showAlert('Password must be at least 6 characters', 'warning', document.getElementById('alertContainer'));
+        return;
+      }
+
+      try {
+        const response = await api.register(payload);
+        if (response.success || response.token) {
+          showAlert('Teacher account created successfully', 'success', document.getElementById('alertContainer'));
+          document.getElementById('teacherForm').reset();
+        } else {
+          showAlert(response.message || 'Failed to create teacher', 'danger', document.getElementById('alertContainer'));
+        }
+      } catch (error) {
+        console.error('Teacher create error:', error);
+        showAlert('An error occurred while creating teacher', 'danger', document.getElementById('alertContainer'));
+      }
+    });
+
+    loadTeachers();
+  </script>
 </body>
 </html>
