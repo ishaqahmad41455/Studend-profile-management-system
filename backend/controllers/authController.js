@@ -24,7 +24,12 @@ const register = async (req, res) => {
     const safeRole = role === 'admin' ? 'student' : role || 'student';
 
     const user = await User.create({ name, email, password, role: safeRole });
-    const token = generateToken(user._id);
+    // const token = generateToken(user._id);
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }  // <-- must be the exact env variable
+    );
 
     res.status(201).json({
       success: true,
@@ -57,7 +62,17 @@ const login = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
-    const token = generateToken(user._id);
+    // const token = generateToken(user._id);
+    console.log({
+      JWT_SECRET: process.env.JWT_SECRET,
+      JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
+      type: typeof process.env.JWT_EXPIRES_IN
+    });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }  // <-- must be the exact env variable
+    );
 
     res.json({
       success: true,

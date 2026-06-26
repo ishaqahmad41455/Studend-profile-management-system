@@ -2,7 +2,8 @@
    GLOBAL API UTILITY — Student Management System
    ============================================ */
 
-const API_BASE = 'http://localhost:5000/api';
+// const API_BASE = 'http://localhost:5000/api';
+const API_BASE = '/api';
 
 // ---- Token Management ----
 const getToken = () => localStorage.getItem('sms_token');
@@ -50,6 +51,7 @@ const redirectByRole = (role) => {
   else if (role === 'teacher') window.location.href = '/teacher/dashboard.html';
   else window.location.href = '/student/dashboard.html';
 };
+
 
 // ---- Logout ----
 const logout = () => {

@@ -15,7 +15,9 @@ services:
     environment:
       PORT: 5000
       MONGO_URI: mongodb://host.docker.internal:27017/student-management
-      JWT_SECRET: d2171496a4f257f1dd237ed4ba15a3d80f2f499a2db2ffcce803d38212925e85fc984adf1baf84207716325fafd980e8325e11da5832020d209c8abea0caff70
+      JWT_SECRET: af527edb653fddf1c6e93431385b7313a6f57989710b3b6873d95fdbb372e8a8d95511177bb3b9a5785ee8a52f1b1d40cecd92d8593aee4743a0f5c60a968d7e
+      JWT_EXPIRES_I: 1h
+
 
     restart: always
 
