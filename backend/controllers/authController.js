@@ -1,95 +1,118 @@
-const User = require('../models/user');
+// backend/controllers/authController.js
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');          // make sure path matches exactly (User.js)
+const Student = require('../models/Student');   // if your user model is separate
 
-// Generate JWT token
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE
-  });
+// Helper: generate JWT with proper expiresIn from env
+const generateToken = (id, role) => {
+  // FIX: Use process.env.JWT_EXPIRES_IN (make sure it's set to "7d" or similar in .env)
+  const expiresIn = process.env.JWT_EXPIRES_IN || '7d';  // fallback just in case
+  return jwt.sign(
+    { id, role },
+    process.env.JWT_SECRET,
+    { expiresIn }    // this must be a valid string like "7d" or a number of seconds
+  );
 };
 
-// @desc    Register user
+// @desc    Register a new student
 // @route   POST /api/auth/register
-// @access  Public
 const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, studentId, class: className, phone } = req.body;
 
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
 
-    // Prevent self-assignment of admin role through public registration
-    const safeRole = role === 'admin' ? 'student' : role || 'student';
+    // Create user
+    const user = await User.create({
+      name,
+      email,
+      password,          // password will be hashed by a pre-save hook in the User model
+      role: 'student',
+    });
 
-    const user = await User.create({ name, email, password, role: safeRole });
-    // const token = generateToken(user._id);
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }  // <-- must be the exact env variable
-    );
+    // Optionally create a Student profile linked to this user
+    await Student.create({
+      userId: user._id,
+      studentId,
+      class: className,
+      phone,
+    });
+
+    // FIX: Generate token using the helper
+    const token = generateToken(user._id, 'student');
 
     res.status(201).json({
       success: true,
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (error) {
+    console.error('Register error:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
 // @desc    Login user
 // @route   POST /api/auth/login
-// @access  Public
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
+    // Validate email & password
     if (!email || !password) {
       return res.status(400).json({ success: false, message: 'Please provide email and password' });
     }
 
+    // Find user by email and include password for comparison
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
+    // Check if password matches
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
-    // const token = generateToken(user._id);
-    console.log({
-      JWT_SECRET: process.env.JWT_SECRET,
-      JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
-      type: typeof process.env.JWT_EXPIRES_IN
-    });
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }  // <-- must be the exact env variable
-    );
+    // Optional: check role if provided in body (front-end sends it)
+    if (role && user.role !== role) {
+      return res.status(403).json({ success: false, message: 'Invalid role for this account' });
+    }
+
+    // FIX: Generate token using the helper
+    const token = generateToken(user._id, user.role);
 
     res.json({
       success: true,
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// @desc    Get current logged in user
+// @desc    Get current user
 // @route   GET /api/auth/me
-// @access  Private
 const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id).select('-password');
     res.json({ success: true, data: user });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
