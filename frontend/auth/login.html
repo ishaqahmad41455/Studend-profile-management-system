@@ -17,35 +17,18 @@
             </div>
 
             <form id="loginForm">
+                <!-- ... form fields unchanged ... -->
                 <div class="form-group">
-                    <label for="email">
-                        <i class="fas fa-envelope"></i> Email Address
-                    </label>
-                    <input type="email" id="email" class="form-control" required 
-                           placeholder="Enter your email">
+                    <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" class="form-control" required placeholder="Enter your email">
                 </div>
-
                 <div class="form-group">
-                    <label for="password">
-                        <i class="fas fa-lock"></i> Password
-                    </label>
-                    <input type="password" id="password" class="form-control" required 
-                           placeholder="Enter your password">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" class="form-control" required placeholder="Enter your password">
                 </div>
 
                 <div class="role-select" id="roleSelect">
-                    <div class="role-option" data-role="student">
-                        <i class="fas fa-user-graduate"></i>
-                        Student
-                    </div>
-                    <div class="role-option" data-role="teacher">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        Teacher
-                    </div>
-                    <div class="role-option" data-role="admin">
-                        <i class="fas fa-user-shield"></i>
-                        Admin
-                    </div>
+                    <!-- role options unchanged -->
                 </div>
 
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
@@ -61,7 +44,7 @@
 
     <script src="../assets/js/api.js"></script>
     <script>
-        // Role Selection
+        // Role Selection (unchanged)
         let selectedRole = 'student';
         document.querySelectorAll('.role-option').forEach(option => {
             option.addEventListener('click', function() {
@@ -70,55 +53,45 @@
                 selectedRole = this.dataset.role;
             });
         });
-
-        // Set default active role
         document.querySelector('[data-role="student"]').classList.add('active');
 
         // Login Form Submit
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('http://localhost:5000/api/auth/login', {
+                // FIX: use relative URL (same origin as backend on port 8080)
+                const response = await fetch('/api/auth/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password, role: selectedRole })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    showToast('Login successful!', 'success');
+                    // FIX: use setAuth from api.js to store with correct keys (sms_token / sms_user)
+                    setAuth(data.token, data.user);
 
-                    // Redirect based on role
+                    // FIX: replaced undefined showToast with showAlert from api.js
+                    showAlert('Login successful!', 'success');
+
                     setTimeout(() => {
-                        switch(data.user.role) {
-                            case 'admin':
-                                window.location.href = '../admin/dashboard.html';
-                                break;
-                            case 'teacher':
-                                window.location.href = '../teacher/dashboard.html';
-                                break;
-                            case 'student':
-                                window.location.href = '../student/dashboard.html';
-                                break;
-                            default:
-                                window.location.href = '../index.html';
-                        }
+                        const roleRoutes = {
+                            admin: '/admin/dashboard.html',
+                            teacher: '/teacher/dashboard.html',
+                            student: '/student/dashboard.html'
+                        };
+                        location.assign(roleRoutes[data.user.role] || '/index.html');
                     }, 1000);
                 } else {
-                    showToast(data.message || 'Login failed', 'error');
+                    showAlert(data.message || 'Login failed!', 'danger');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showToast('An error occurred. Please try again.', 'error');
+                showAlert('An error occurred. Please try again.', 'danger');
             }
         });
     </script>

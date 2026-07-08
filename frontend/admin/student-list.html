@@ -1,315 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student List - Admin Panel</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student List | SMS</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar (same as admin dashboard) -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3><i class="fas fa-graduation-cap"></i> EduManage</h3>
-            </div>
-            <ul class="sidebar-menu">
-                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="student-list.html" class="active"><i class="fas fa-users"></i> Students</a></li>
-                <li><a href="manage-teachers.html"><i class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
-                <li><a href="manage-classes.html"><i class="fas fa-school"></i> Classes</a></li>
-                <li><a href="manage-subjects.html"><i class="fas fa-book"></i> Subjects</a></li>
-                <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="dashboard-header">
-                <div>
-                    <h2>Student List</h2>
-                    <p style="color: var(--gray-color);">Manage all students</p>
-                </div>
-                <div>
-                    <button class="btn btn-primary" onclick="openAddStudentModal()">
-                        <i class="fas fa-plus"></i> Add Student
-                    </button>
-                    <button class="btn btn-outline ml-1" onclick="exportStudents()">
-                        <i class="fas fa-download"></i> Export
-                    </button>
-                </div>
-            </div>
-
-            <!-- Filters -->
-            <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem; box-shadow: var(--card-shadow);">
-                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 200px;">
-                        <input type="text" id="searchInput" class="form-control" 
-                               placeholder="Search students..." onkeyup="searchStudents()">
-                    </div>
-                    <div style="flex: 1; min-width: 200px;">
-                        <select id="classFilter" class="form-control" onchange="filterStudents()">
-                            <option value="">All Classes</option>
-                            <option value="10A">Class 10A</option>
-                            <option value="10B">Class 10B</option>
-                            <option value="11A">Class 11A</option>
-                            <option value="11B">Class 11B</option>
-                            <option value="12A">Class 12A</option>
-                            <option value="12B">Class 12B</option>
-                        </select>
-                    </div>
-                    <div style="flex: 1; min-width: 200px;">
-                        <select id="statusFilter" class="form-control" onchange="filterStudents()">
-                            <option value="">All Status</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Students Table -->
-            <div class="table-container">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Student ID</th>
-                                <th>Name</th>
-                                <th>Class</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentsTableBody">
-                            <!-- Loading spinner -->
-                            <tr>
-                                <td colspan="7">
-                                    <div class="spinner"></div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Add/Edit Student Modal -->
-    <div class="modal" id="studentModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Add New Student</h3>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-            </div>
-            <form id="studentForm">
-                <input type="hidden" id="studentId">
-                <div class="form-group">
-                    <label for="studentName">Full Name</label>
-                    <input type="text" id="studentName" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="studentEmail">Email</label>
-                    <input type="email" id="studentEmail" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="studentClass">Class</label>
-                    <select id="studentClass" class="form-control" required>
-                        <option value="">Select Class</option>
-                        <option value="10A">Class 10A</option>
-                        <option value="10B">Class 10B</option>
-                        <option value="11A">Class 11A</option>
-                        <option value="11B">Class 11B</option>
-                        <option value="12A">Class 12A</option>
-                        <option value="12B">Class 12B</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="studentPhone">Phone</label>
-                    <input type="tel" id="studentPhone" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="studentStatus">Status</label>
-                    <select id="studentStatus" class="form-control">
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i class="fas fa-save"></i> Save Student
-                </button>
-            </form>
+  <div class="app-wrapper">
+    <!-- Sidebar – identical to dashboard -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">S</div>
+        <div class="sidebar-logo-text">SMS Platform <span>Admin Panel</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <div class="nav-section-title">Management</div>
+        <a href="manage-teachers.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          Teachers
+        </a>
+        <a href="manage-classes.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Classes
+        </a>
+        <a href="manage-subjects.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Subjects
+        </a>
+        <a href="manage-students.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Students
+        </a>
+        <a href="student-list.html" class="nav-link active">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Student Profiles
+        </a>
+        <div class="nav-section-title">Reports</div>
+        <a href="../reports/monthly-report.html" class="nav-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Monthly Report
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar" id="sidebar-avatar">A</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+            <div class="sidebar-user-role" id="sidebar-user-role">admin</div>
+          </div>
+          <button class="btn-logout" onclick="logout()" title="Logout">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
         </div>
-    </div>
+      </div>
+    </aside>
 
-    <script src="../assets/js/api.js"></script>
-    <script>
-        let allStudents = [];
+    <!-- Main Content -->
+    <div class="main-content">
+      <header class="top-header">
+        <div>
+          <div class="header-title">Student Profiles</div>
+          <div class="header-subtitle">View, filter, and export student records</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary btn-sm" onclick="openAddStudentModal()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Student
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="exportStudents()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+        </div>
+      </header>
 
-        async function loadStudents() {
-            try {
-                const response = await api.get('/students');
-                if (response.success) {
-                    allStudents = response.data;
-                    displayStudents(allStudents);
-                }
-            } catch (error) {
-                console.error('Error loading students:', error);
-                showToast('Failed to load students', 'error');
-            }
-        }
+      <div class="page-content">
+        <div id="alertContainer"></div>
 
-        function displayStudents(students) {
-            const tbody = document.getElementById('studentsTableBody');
-            if (students.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center">No students found</td></tr>';
-                return;
-            }
+        <!-- Filters & Table Card -->
+        <div class="card">
+          <!-- Filter Bar -->
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+            <div style="flex: 1; min-width: 200px;">
+              <input type="text" id="searchInput" class="form-control" placeholder="Search by name, email or student ID..." onkeyup="searchStudents()" />
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+              <select id="classFilter" class="form-control" onchange="filterStudents()">
+                <option value="">All Classes</option>
+              </select>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+              <select id="statusFilter" class="form-control" onchange="filterStudents()">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
 
-            tbody.innerHTML = students.map(student => `
+          <!-- Students Table -->
+          <div class="table-wrapper">
+            <table>
+              <thead>
                 <tr>
-                    <td>${student.studentId || 'N/A'}</td>
-                    <td>${student.name}</td>
-                    <td>${student.class || 'N/A'}</td>
-                    <td>${student.email}</td>
-                    <td>${student.phone || 'N/A'}</td>
-                    <td>
-                        <span class="badge ${student.status === 'active' ? 'badge-success' : 'badge-danger'}">
-                            ${student.status || 'active'}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-outline btn-sm" onclick="editStudent('${student._id}')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteStudent('${student._id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
+                  <th>Student ID</th>
+                  <th>Name</th>
+                  <th>Class</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
-            `).join('');
+              </thead>
+              <tbody id="studentsTableBody">
+                <tr>
+                  <td colspan="7">
+                    <div class="loading">Loading students...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Student Modal (simplified for the “Student List” page) -->
+  <div class="modal-overlay" id="studentModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Add New Student</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="studentForm">
+        <input type="hidden" id="studentId" />
+        <div class="form-group">
+          <label class="form-label" for="studentName">Full Name</label>
+          <input type="text" id="studentName" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="studentEmail">Email</label>
+          <input type="email" id="studentEmail" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="studentClass">Class</label>
+          <select id="studentClass" class="form-control" required>
+            <option value="">Select Class</option>
+            <!-- Dynamically populated from API -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="studentPhone">Phone</label>
+          <input type="tel" id="studentPhone" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="studentStatus">Status</label>
+          <select id="studentStatus" class="form-control">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Save Student
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script>
+    // Consistent API reference
+    const api = API;
+
+    let allStudents = [];
+    let allClasses = [];
+
+    // Populate sidebar user info
+    (function () {
+      const user = getUser();
+      if (user) {
+        document.getElementById('sidebar-user-name').textContent = user.name || 'Admin';
+        document.getElementById('sidebar-user-role').textContent = user.role || 'admin';
+        document.getElementById('sidebar-avatar').textContent = (user.name || 'A').charAt(0).toUpperCase();
+      }
+    })();
+
+    // Load initial data
+    async function loadStudents() {
+      try {
+        const [studentsRes, classesRes] = await Promise.all([
+          api.getStudents(),
+          api.getClasses()
+        ]);
+
+        if (studentsRes.success) {
+          allStudents = studentsRes.data;
+          displayStudents(allStudents);
+        } else {
+          showAlert('Failed to load students', 'danger', document.getElementById('alertContainer'));
         }
 
-        function searchStudents() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allStudents.filter(student => 
-                student.name.toLowerCase().includes(searchTerm) ||
-                student.email.toLowerCase().includes(searchTerm) ||
-                (student.studentId && student.studentId.toLowerCase().includes(searchTerm))
-            );
-            displayStudents(filtered);
+        if (classesRes.success) {
+          allClasses = classesRes.data;
+          renderClassFilter(allClasses);
+          renderClassOptions(allClasses);
         }
+      } catch (error) {
+        console.error('Error loading data:', error);
+        showAlert('Unable to load data', 'danger', document.getElementById('alertContainer'));
+      }
+    }
 
-        function filterStudents() {
-            const classFilter = document.getElementById('classFilter').value;
-            const statusFilter = document.getElementById('statusFilter').value;
-            
-            let filtered = allStudents;
-            
-            if (classFilter) {
-                filtered = filtered.filter(s => s.class === classFilter);
-            }
-            if (statusFilter) {
-                filtered = filtered.filter(s => s.status === statusFilter);
-            }
-            
-            displayStudents(filtered);
-        }
+    // Populate filter dropdown & modal class select
+    function renderClassFilter(classes) {
+      const filter = document.getElementById('classFilter');
+      filter.innerHTML = '<option value="">All Classes</option>' +
+        classes.map(c => `<option value="${c._id}">${c.name}${c.section ? ' ' + c.section : ''}</option>`).join('');
+    }
 
-        function openAddStudentModal() {
-            document.getElementById('modalTitle').textContent = 'Add New Student';
-            document.getElementById('studentForm').reset();
-            document.getElementById('studentId').value = '';
-            document.getElementById('studentModal').classList.add('show');
-        }
+    function renderClassOptions(classes) {
+      const select = document.getElementById('studentClass');
+      select.innerHTML = '<option value="">Select Class</option>' +
+        classes.map(c => `<option value="${c._id}">${c.name}${c.section ? ' ' + c.section : ''}</option>`).join('');
+    }
 
-        function editStudent(id) {
-            const student = allStudents.find(s => s._id === id);
-            if (!student) return;
+    // Display table rows
+    function displayStudents(students) {
+      const tbody = document.getElementById('studentsTableBody');
+      if (!students.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="table-empty">No students found.</td></tr>';
+        return;
+      }
 
-            document.getElementById('modalTitle').textContent = 'Edit Student';
-            document.getElementById('studentId').value = student._id;
-            document.getElementById('studentName').value = student.name;
-            document.getElementById('studentEmail').value = student.email;
-            document.getElementById('studentClass').value = student.class || '';
-            document.getElementById('studentPhone').value = student.phone || '';
-            document.getElementById('studentStatus').value = student.status || 'active';
-            document.getElementById('studentModal').classList.add('show');
-        }
+      tbody.innerHTML = students.map(student => {
+        // Derive status (backend may or may not provide it)
+        const status = student.status || (student.user?.active ? 'active' : 'inactive') || 'active';
+        const badgeClass = status === 'active' ? 'badge-success' : 'badge-danger';
+        return `
+          <tr>
+            <td>${student.studentId || student.user?.studentId || '-'}</td>
+            <td>${student.user?.name || student.name || 'N/A'}</td>
+            <td>${student.class?.name || student.class || 'N/A'}</td>
+            <td>${student.user?.email || student.email || 'N/A'}</td>
+            <td>${student.parentPhone || student.phone || '-'}</td>
+            <td><span class="badge ${badgeClass}">${status}</span></td>
+            <td>
+              <button class="btn btn-sm btn-secondary" onclick="editStudent('${student._id}')" title="Edit">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="deleteStudent('${student._id}')" title="Delete">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
 
-        function closeModal() {
-            document.getElementById('studentModal').classList.remove('show');
-        }
+    // Search & Filter logic
+    function searchStudents() {
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = allStudents.filter(s => {
+        const name = s.user?.name || s.name || '';
+        const email = s.user?.email || s.email || '';
+        const id = s.studentId || s.user?.studentId || '';
+        return name.toLowerCase().includes(term) ||
+               email.toLowerCase().includes(term) ||
+               id.toLowerCase().includes(term);
+      });
+      displayStudents(filtered);
+    }
 
-        async function deleteStudent(id) {
-            if (!confirm('Are you sure you want to delete this student?')) return;
+    function filterStudents() {
+      const classFilter = document.getElementById('classFilter').value;
+      const statusFilter = document.getElementById('statusFilter').value;
+      let filtered = allStudents;
 
-            try {
-                const response = await api.delete(`/students/${id}`);
-                if (response.success) {
-                    showToast('Student deleted successfully', 'success');
-                    loadStudents();
-                } else {
-                    showToast(response.message || 'Failed to delete student', 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('An error occurred', 'error');
-            }
-        }
-
-        document.getElementById('studentForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = {
-                name: document.getElementById('studentName').value,
-                email: document.getElementById('studentEmail').value,
-                class: document.getElementById('studentClass').value,
-                phone: document.getElementById('studentPhone').value,
-                status: document.getElementById('studentStatus').value
-            };
-
-            const studentId = document.getElementById('studentId').value;
-
-            try {
-                let response;
-                if (studentId) {
-                    response = await api.put(`/students/${studentId}`, formData);
-                } else {
-                    response = await api.post('/students/register', formData);
-                }
-
-                if (response.success) {
-                    showToast(studentId ? 'Student updated successfully' : 'Student added successfully', 'success');
-                    closeModal();
-                    loadStudents();
-                } else {
-                    showToast(response.message || 'Operation failed', 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('An error occurred', 'error');
-            }
+      if (classFilter) {
+        filtered = filtered.filter(s => s.class?._id === classFilter || s.class === classFilter);
+      }
+      if (statusFilter) {
+        filtered = filtered.filter(s => {
+          const status = s.status || (s.user?.active ? 'active' : 'inactive') || 'active';
+          return status === statusFilter;
         });
+      }
 
-        function exportStudents() {
-            // Implementation for exporting to CSV/Excel
-            showToast('Export feature coming soon!', 'success');
+      displayStudents(filtered);
+    }
+
+    // Modal handling
+    function openAddStudentModal() {
+      document.getElementById('modalTitle').textContent = 'Add New Student';
+      document.getElementById('studentForm').reset();
+      document.getElementById('studentId').value = '';
+      document.getElementById('studentModal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('studentModal').classList.remove('open');
+    }
+
+    function editStudent(id) {
+      const student = allStudents.find(s => s._id === id);
+      if (!student) return;
+
+      document.getElementById('modalTitle').textContent = 'Edit Student';
+      document.getElementById('studentId').value = student._id;
+      document.getElementById('studentName').value = student.user?.name || student.name || '';
+      document.getElementById('studentEmail').value = student.user?.email || student.email || '';
+      // Use class _id if available, otherwise the raw class string
+      document.getElementById('studentClass').value = student.class?._id || student.class || '';
+      document.getElementById('studentPhone').value = student.parentPhone || student.phone || '';
+      document.getElementById('studentStatus').value = student.status || (student.user?.active ? 'active' : 'inactive') || 'active';
+      document.getElementById('studentModal').classList.add('open');
+    }
+
+    async function deleteStudent(id) {
+      if (!confirm('Are you sure you want to delete this student?')) return;
+      try {
+        const response = await api.deleteStudent(id);
+        if (response.success) {
+          showAlert('Student deleted successfully', 'success', document.getElementById('alertContainer'));
+          loadStudents();
+        } else {
+          showAlert(response.message || 'Failed to delete student', 'danger', document.getElementById('alertContainer'));
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+        showAlert('An error occurred while deleting student', 'danger', document.getElementById('alertContainer'));
+      }
+    }
+
+    // Form submission
+    document.getElementById('studentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const studentId = document.getElementById('studentId').value;
+      const payload = {
+        name: document.getElementById('studentName').value.trim(),
+        email: document.getElementById('studentEmail').value.trim(),
+        classId: document.getElementById('studentClass').value,  // Using class ID
+        phone: document.getElementById('studentPhone').value.trim(),
+        status: document.getElementById('studentStatus').value
+      };
+
+      if (!payload.name || !payload.email || !payload.classId) {
+        showAlert('Name, email and class are required', 'warning', document.getElementById('alertContainer'));
+        return;
+      }
+
+      try {
+        let response;
+        if (studentId) {
+          // Update – note: your backend might expect different keys; adjust as needed
+          response = await api.updateStudent(studentId, payload);
+        } else {
+          // Create – adjust payload to match your /students/register endpoint
+          response = await api.createStudent(payload);
         }
 
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('studentModal');
-            if (event.target === modal) {
-                closeModal();
-            }
+        if (response.success) {
+          showAlert(studentId ? 'Student updated successfully' : 'Student added successfully', 'success', document.getElementById('alertContainer'));
+          closeModal();
+          loadStudents();
+        } else {
+          showAlert(response.message || 'Operation failed', 'danger', document.getElementById('alertContainer'));
         }
+      } catch (error) {
+        console.error('Save error:', error);
+        showAlert('An error occurred while saving student', 'danger', document.getElementById('alertContainer'));
+      }
+    });
 
-        // Load students on page load
-        loadStudents();
-    </script>
+    // Placeholder export
+    function exportStudents() {
+      showAlert('Export feature coming soon!', 'info', document.getElementById('alertContainer'));
+    }
+
+    // Close modal on overlay click
+    document.getElementById('studentModal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+
+    // Initial load
+    loadStudents();
+  </script>
 </body>
 </html>
