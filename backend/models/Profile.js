@@ -29,6 +29,14 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  parentName: {
+    type: String,
+    trim: true
+  },
+  parentPhone: {
+    type: String,
+    trim: true
+  },
   dateOfBirth: {
     type: Date
   },

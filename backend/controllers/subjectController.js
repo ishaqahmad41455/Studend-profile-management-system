@@ -15,7 +15,8 @@ const getSubjects = async (req, res) => {
 
 const createSubject = async (req, res) => {
   try {
-    const subject = await Subject.create(req.body);
+    const { name, code, classId } = req.body;
+    const subject = await Subject.create({ name, code, class: classId });
     res.status(201).json({ success: true, data: subject });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -24,9 +25,12 @@ const createSubject = async (req, res) => {
 
 const updateSubject = async (req, res) => {
   try {
-    const subject = await Subject.findByIdAndUpdate(req.params.id, req.body, {
-      new: true, runValidators: true
-    });
+    const { name, code, classId } = req.body;
+    const subject = await Subject.findByIdAndUpdate(
+      req.params.id,
+      { name, code, class: classId },
+      { new: true, runValidators: true }
+    );
     if (!subject) return res.status(404).json({ success: false, message: 'Subject not found' });
     res.json({ success: true, data: subject });
   } catch (error) {

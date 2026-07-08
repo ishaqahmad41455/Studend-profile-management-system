@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <div class="auth-container">
         <div class="auth-card">
@@ -21,24 +23,21 @@
                     <label for="name">
                         <i class="fas fa-user"></i> Full Name
                     </label>
-                    <input type="text" id="name" class="form-control" required 
-                           placeholder="Enter your full name">
+                    <input type="text" id="name" class="form-control" required placeholder="Enter your full name">
                 </div>
 
                 <div class="form-group">
                     <label for="email">
                         <i class="fas fa-envelope"></i> Email Address
                     </label>
-                    <input type="email" id="email" class="form-control" required 
-                           placeholder="Enter your email">
+                    <input type="email" id="email" class="form-control" required placeholder="Enter your email">
                 </div>
 
                 <div class="form-group">
                     <label for="studentId">
                         <i class="fas fa-id-card"></i> Student ID
                     </label>
-                    <input type="text" id="studentId" class="form-control" required 
-                           placeholder="Enter student ID">
+                    <input type="text" id="studentId" class="form-control" required placeholder="Enter student ID">
                 </div>
 
                 <div class="form-group">
@@ -60,16 +59,15 @@
                     <label for="phone">
                         <i class="fas fa-phone"></i> Phone Number
                     </label>
-                    <input type="tel" id="phone" class="form-control" required 
-                           placeholder="Enter phone number">
+                    <input type="tel" id="phone" class="form-control" required placeholder="Enter phone number">
                 </div>
 
                 <div class="form-group">
                     <label for="password">
                         <i class="fas fa-lock"></i> Password
                     </label>
-                    <input type="password" id="password" class="form-control" required 
-                           placeholder="Create password" minlength="6">
+                    <input type="password" id="password" class="form-control" required placeholder="Create password"
+                        minlength="6">
                     <small class="form-text">Minimum 6 characters</small>
                 </div>
 
@@ -77,8 +75,8 @@
                     <label for="confirmPassword">
                         <i class="fas fa-lock"></i> Confirm Password
                     </label>
-                    <input type="password" id="confirmPassword" class="form-control" required 
-                           placeholder="Confirm password">
+                    <input type="password" id="confirmPassword" class="form-control" required
+                        placeholder="Confirm password">
                 </div>
 
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
@@ -96,7 +94,7 @@
     <script>
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -115,13 +113,18 @@
             };
 
             try {
-                const response = await fetch('http://localhost:5000/api/auth/register', {
+                const response = await fetch('/api/auth/register', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
                 });
+                // const response = await fetch('http://localhost:5000/api/auth/register', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify(formData)
+                // });
 
                 const data = await response.json();
 
@@ -140,4 +143,5 @@
         });
     </script>
 </body>
+
 </html>
