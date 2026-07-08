@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edit Profile | SMS</title>
   <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
+
 <body>
   <div class="app-wrapper">
     <!-- Sidebar – student navigation -->
@@ -17,21 +19,36 @@
       <nav class="sidebar-nav">
         <div class="nav-section-title">Main</div>
         <a href="dashboard.html" class="nav-link">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+          </svg>
           Dashboard
         </a>
         <div class="nav-section-title">Student</div>
         <a href="attendance.html" class="nav-link">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/></svg>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path
+              d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" />
+          </svg>
           My Attendance
         </a>
         <a href="edit-profile.html" class="nav-link active">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
           Edit Profile
         </a>
         <div class="nav-section-title">Reports</div>
         <a href="../reports/monthly-report.html" class="nav-link">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg>
           Monthly Report
         </a>
       </nav>
@@ -43,7 +60,11 @@
             <div class="sidebar-user-role">student</div>
           </div>
           <button class="btn-logout" onclick="logout()" title="Logout">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
           </button>
         </div>
       </div>
@@ -57,7 +78,9 @@
           <div class="header-subtitle">Update your personal information</div>
         </div>
         <div class="header-actions">
-          <div class="sidebar-user-avatar" style="width: 34px; height: 34px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; margin-right: 8px;" id="header-avatar">S</div>
+          <div class="sidebar-user-avatar"
+            style="width: 34px; height: 34px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; margin-right: 8px;"
+            id="header-avatar">S</div>
           <span id="header-display-name" style="font-weight: 600;">Student Name</span>
         </div>
       </header>
@@ -68,7 +91,9 @@
         <div class="card" style="max-width: 700px; margin: 0 auto;">
           <!-- Avatar & Name -->
           <div style="text-align: center; margin-bottom: 2rem;">
-            <div class="sidebar-user-avatar" id="profileAvatar" style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: #fff;">S</div>
+            <div class="sidebar-user-avatar" id="profileAvatar"
+              style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: #fff;">
+              S</div>
             <h3 id="profileName" style="margin: 1rem 0 0.25rem;">Student Name</h3>
             <p style="color: var(--text-secondary); font-size: 0.875rem;">Student</p>
           </div>
@@ -99,7 +124,9 @@
               <input type="tel" id="parentPhone" class="form-control" />
             </div>
             <button type="submit" class="btn btn-primary" style="width: 100%;">
-              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               Save Changes
             </button>
           </form>
@@ -112,7 +139,6 @@
   <script>
     const api = API;
 
-    // Populate sidebar & header
     (function () {
       const user = getUser();
       if (user) {
@@ -122,63 +148,52 @@
         document.getElementById('profileAvatar').textContent = (user.name || 'S').charAt(0).toUpperCase();
         document.getElementById('header-display-name').textContent = user.name || 'Student Name';
         document.getElementById('header-avatar').textContent = (user.name || 'S').charAt(0).toUpperCase();
+        document.getElementById('name').value = user.name || '';
+        document.getElementById('email').value = user.email || '';
+        // Name/email live on the User account, not the Profile — edit them from account settings.
+        document.getElementById('name').readOnly = true;
+        document.getElementById('email').readOnly = true;
       }
     })();
 
+    let existingProfileId = null;
+
     async function loadProfile() {
       try {
-        // Fetch the student's existing profile (adjust endpoint as needed)
-        const response = await api.getMyProfile();   // or api.get('/students/profile')
-        if (response.success) {
+        const response = await api.getMyProfile();
+        if (response.success && response.data) {
           const profile = response.data;
-          document.getElementById('name').value = profile.name || '';
-          document.getElementById('email').value = profile.email || '';
+          existingProfileId = profile._id;
           document.getElementById('phone').value = profile.phone || '';
           document.getElementById('address').value = profile.address || '';
           document.getElementById('parentName').value = profile.parentName || '';
           document.getElementById('parentPhone').value = profile.parentPhone || '';
-        } else {
-          // If no profile found, fill with current user data
-          const user = getUser();
-          if (user) {
-            document.getElementById('name').value = user.name || '';
-            document.getElementById('email').value = user.email || '';
-          }
         }
       } catch (error) {
-        console.error('Error loading profile:', error);
-        showAlert('Could not load profile information', 'danger', document.getElementById('alertContainer'));
+        // No profile yet — that's fine, the first save will create one.
       }
     }
 
     document.getElementById('profileForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const payload = {
-        name: document.getElementById('name').value.trim(),
-        email: document.getElementById('email').value.trim(),
         phone: document.getElementById('phone').value.trim(),
         address: document.getElementById('address').value.trim(),
         parentName: document.getElementById('parentName').value.trim(),
         parentPhone: document.getElementById('parentPhone').value.trim()
       };
 
-      if (!payload.name || !payload.email) {
-        showAlert('Name and email are required', 'warning', document.getElementById('alertContainer'));
-        return;
-      }
-
       try {
-        // Update profile – adjust endpoint if needed (e.g., api.updateProfile(profileId, payload) or api.updateMyProfile(payload))
-        const response = await api.updateProfile(null, payload);  // assuming the backend identifies the logged-in user
+        let response;
+        if (existingProfileId) {
+          response = await api.updateProfile(existingProfileId, payload);
+        } else {
+          response = await api.createProfile(payload);
+          if (response.success) existingProfileId = response.data._id;
+        }
+
         if (response.success) {
           showAlert('Profile updated successfully', 'success', document.getElementById('alertContainer'));
-          // Update the displayed name/avatar instantly
-          document.getElementById('profileName').textContent = payload.name;
-          document.getElementById('profileAvatar').textContent = payload.name.charAt(0).toUpperCase();
-          document.getElementById('header-display-name').textContent = payload.name;
-          document.getElementById('header-avatar').textContent = payload.name.charAt(0).toUpperCase();
-          document.getElementById('sidebar-user-name').textContent = payload.name;
-          document.getElementById('sidebar-avatar').textContent = payload.name.charAt(0).toUpperCase();
         } else {
           showAlert(response.message || 'Update failed', 'danger', document.getElementById('alertContainer'));
         }
@@ -191,4 +206,5 @@
     loadProfile();
   </script>
 </body>
+
 </html>
