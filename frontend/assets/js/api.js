@@ -7,8 +7,8 @@ const API_BASE = '/api';
 
 // ---- Token Management ----
 const getToken = () => localStorage.getItem('sms_token');
-const getUser  = () => JSON.parse(localStorage.getItem('sms_user') || 'null');
-const setAuth  = (token, user) => {
+const getUser = () => JSON.parse(localStorage.getItem('sms_user') || 'null');
+const setAuth = (token, user) => {
   localStorage.setItem('sms_token', token);
   localStorage.setItem('sms_user', JSON.stringify(user));
 };
@@ -47,7 +47,7 @@ const requireAuth = (allowedRoles = []) => {
 };
 
 const redirectByRole = (role) => {
-  if (role === 'admin')   window.location.href = '/admin/dashboard.html';
+  if (role === 'admin') window.location.href = '/admin/dashboard.html';
   else if (role === 'teacher') window.location.href = '/teacher/dashboard.html';
   else window.location.href = '/student/dashboard.html';
 };
@@ -118,43 +118,50 @@ const populateSidebarUser = () => {
 // ---- API Methods ----
 const API = {
   // Auth
-  login:    (data) => apiFetch('/auth/login',    { method: 'POST', body: JSON.stringify(data) }),
+  login: (data) => apiFetch('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
   register: (data) => apiFetch('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
-  getMe:    ()     => apiFetch('/auth/me'),
+  getMe: () => apiFetch('/auth/me'),
 
   // Students
-  getStudents:  (params = '') => apiFetch(`/students${params}`),
-  getStudent:   (id)          => apiFetch(`/students/${id}`),
-  createStudent:(data)        => apiFetch('/students', { method: 'POST', body: JSON.stringify(data) }),
-  updateStudent:(id, data)    => apiFetch(`/students/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  deleteStudent:(id)          => apiFetch(`/students/${id}`, { method: 'DELETE' }),
+  getStudents: (params = '') => apiFetch(`/students${params}`),
+  getStudent: (id) => apiFetch(`/students/${id}`),
+  createStudent: (data) => apiFetch('/students', { method: 'POST', body: JSON.stringify(data) }),
+  updateStudent: (id, data) => apiFetch(`/students/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteStudent: (id) => apiFetch(`/students/${id}`, { method: 'DELETE' }),
 
   // Classes
-  getClasses:  ()         => apiFetch('/classes'),
-  getClass:    (id)       => apiFetch(`/classes/${id}`),
-  createClass: (data)     => apiFetch('/classes', { method: 'POST', body: JSON.stringify(data) }),
+  getClasses: () => apiFetch('/classes'),
+  getClass: (id) => apiFetch(`/classes/${id}`),
+  createClass: (data) => apiFetch('/classes', { method: 'POST', body: JSON.stringify(data) }),
   updateClass: (id, data) => apiFetch(`/classes/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  deleteClass: (id)       => apiFetch(`/classes/${id}`, { method: 'DELETE' }),
+  deleteClass: (id) => apiFetch(`/classes/${id}`, { method: 'DELETE' }),
 
   // Subjects
-  getSubjects:  (classId = '') => apiFetch(`/subjects${classId ? '?classId=' + classId : ''}`),
-  createSubject:(data)         => apiFetch('/subjects', { method: 'POST', body: JSON.stringify(data) }),
-  updateSubject:(id, data)     => apiFetch(`/subjects/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  deleteSubject:(id)           => apiFetch(`/subjects/${id}`, { method: 'DELETE' }),
+  getSubjects: (classId = '') => apiFetch(`/subjects${classId ? '?classId=' + classId : ''}`),
+  createSubject: (data) => apiFetch('/subjects', { method: 'POST', body: JSON.stringify(data) }),
+  updateSubject: (id, data) => apiFetch(`/subjects/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteSubject: (id) => apiFetch(`/subjects/${id}`, { method: 'DELETE' }),
 
   // Attendance
   getAttendance: (params = '') => apiFetch(`/attendance${params}`),
-  markAttendance:(data)        => apiFetch('/attendance', { method: 'POST', body: JSON.stringify(data) }),
-  getAttendanceSummary:(id, subject = '') => apiFetch(`/attendance/summary/${id}${subject ? '?subjectId='+subject : ''}`),
+  markAttendance: (data) => apiFetch('/attendance', { method: 'POST', body: JSON.stringify(data) }),
+  getAttendanceSummary: (id, subject = '') => apiFetch(`/attendance/summary/${id}${subject ? '?subjectId=' + subject : ''}`),
 
   // Reports
-  getMonthlyReport:(month, year, classId = '', subjectId = '') => apiFetch(`/reports/monthly?month=${month}&year=${year}${classId?'&classId='+classId:''}${subjectId?'&subjectId='+subjectId:''}`),
-  getClassReport:  (classId, params = '') => apiFetch(`/reports/class/${classId}${params}`),
+  getMonthlyReport: (month, year, classId = '', subjectId = '') => apiFetch(`/reports/monthly?month=${month}&year=${year}${classId ? '&classId=' + classId : ''}${subjectId ? '&subjectId=' + subjectId : ''}`),
+  getClassReport: (classId, params = '') => apiFetch(`/reports/class/${classId}${params}`),
 
   // Profiles
-  getProfiles:   (search = '') => apiFetch(`/profiles${search ? '?search=' + search : ''}`),
-  getMyProfile:  ()            => apiFetch('/profiles/my'),
-  createProfile: (data)        => apiFetch('/profiles', { method: 'POST', body: JSON.stringify(data) }),
-  updateProfile: (id, data)    => apiFetch(`/profiles/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  deleteProfile: (id)          => apiFetch(`/profiles/${id}`, { method: 'DELETE' }),
+  getProfiles: (search = '') => apiFetch(`/profiles${search ? '?search=' + search : ''}`),
+  getMyProfile: () => apiFetch('/profiles/my'),
+  createProfile: (data) => apiFetch('/profiles', { method: 'POST', body: JSON.stringify(data) }),
+  updateProfile: (id, data) => apiFetch(`/profiles/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteProfile: (id) => apiFetch(`/profiles/${id}`, { method: 'DELETE' }),
+
+  // Users (Admin-managed accounts)
+  createTeacher: (data) => apiFetch('/users', { method: 'POST', body: JSON.stringify({ ...data, role: 'teacher' }) }),
+  getTeachers: () => apiFetch('/users/teachers'),
+  deleteUser: (id) => apiFetch(`/users/${id}`, { method: 'DELETE' }),
 };
+
+
