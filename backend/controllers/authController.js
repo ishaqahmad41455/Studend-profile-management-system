@@ -10,34 +10,29 @@ const generateToken = (id, role) => {
 // @route   POST /api/auth/register
 const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, message: 'Name, email and password are required' });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+    }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
 
-    // Only create the User account here. Detailed student/teacher profile
-    // data (roll number, class, etc.) is created separately by an admin
-    // via /api/students, or by the user themselves via /api/profiles.
-    const user = await User.create({
-      name,
-      email,
-      password,
-      role: role || 'student',
-    });
-
+    // Public self-registration is ALWAYS a student account.
+    // Teacher/Admin accounts can only be created via the protected /api/users endpoint.
+    const user = await User.create({ name, email, password, role: 'student' });
     const token = generateToken(user._id, user.role);
 
     res.status(201).json({
       success: true,
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
   } catch (error) {
     handleControllerError(error, res);

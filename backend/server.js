@@ -23,6 +23,7 @@ app.use('/api/subjects',   require('./routes/subjects'));
 app.use('/api/attendance', require('./routes/attendance'));
 app.use('/api/reports',    require('./routes/reports'));
 app.use('/api/profiles',   require('./routes/profiles'));
+app.use('/api/users', require('./routes/users'));
 
 app.get('/', (req, res) => {
   res.json({ message: 'Student Management System API Running' });
