@@ -4,8 +4,7 @@ const ClassSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please add a class name'],
-    trim: true,
-    unique: true
+    trim: true
   },
   section: {
     type: String,
@@ -31,5 +30,5 @@ const ClassSchema = new mongoose.Schema({
     default: Date.now
   }
 });
-
+ClassSchema.index({ name: 1, section: 1 }, { unique: true });
 module.exports = mongoose.model('Class', ClassSchema);

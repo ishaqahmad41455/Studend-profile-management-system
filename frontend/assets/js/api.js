@@ -157,4 +157,15 @@ const API = {
   createProfile: (data)        => apiFetch('/profiles', { method: 'POST', body: JSON.stringify(data) }),
   updateProfile: (id, data)    => apiFetch(`/profiles/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteProfile: (id)          => apiFetch(`/profiles/${id}`, { method: 'DELETE' }),
+
+  // createStudentAdmin: (data) => apiFetch('/students', { 
+  //   method: 'POST', 
+  //   body: JSON.stringify({ ...data, role: 'student' }) 
+  // }),
+  
+  // createTeacherAdmin: (data) => apiFetch('/teachers', { 
+  //   method: 'POST', 
+  //   body: JSON.stringify({ ...data, role: 'teacher' }) 
+  // })
 };
+

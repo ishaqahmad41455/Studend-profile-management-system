@@ -37,6 +37,20 @@ const authorize = (...roles) => {
     }
     next();
   };
+
+  // // Add admin role check
+  // if (allowedRoles.includes('admin') && user.role !== 'admin') {
+  //   showAlert('Admin access required', 'danger');
+  //   window.location.href = '/admin/dashboard.html'; // Redirect to admin dashboard
+  //   return null;
+  // }
+  
+  // if (allowedRoles.length && !allowedRoles.includes(user.role)) {
+  //   redirectByRole(user.role);
+  //   return null;
+  // }
+  // return user;
 };
+
 
 module.exports = { protect, authorize };
