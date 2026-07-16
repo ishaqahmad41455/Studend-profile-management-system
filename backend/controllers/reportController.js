@@ -59,7 +59,7 @@ const getMonthlyReport = async (req, res) => {
       data: report
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -84,7 +84,7 @@ const getClassReport = async (req, res) => {
 
     res.json({ success: true, count: records.length, data: records });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 

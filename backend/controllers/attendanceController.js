@@ -49,7 +49,7 @@ const markAttendance = async (req, res) => {
       errors
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -91,7 +91,7 @@ const getAttendance = async (req, res) => {
 
     res.json({ success: true, count: attendance.length, data: attendance });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -118,7 +118,7 @@ const getAttendanceSummary = async (req, res) => {
       data: { total, present, absent, late, percentage }
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 

@@ -135,9 +135,10 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('An error occurred. Please try again.', 'danger', alertContainer);
+                showAlert('Could not reach the server. Please check your connection and try again.', 'danger', alertContainer);
             } finally {
                 setLoading(submitBtn, false);
+            }
             }
         });
     </script>

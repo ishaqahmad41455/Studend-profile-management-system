@@ -162,6 +162,14 @@ const API = {
   createTeacher: (data) => apiFetch('/users', { method: 'POST', body: JSON.stringify({ ...data, role: 'teacher' }) }),
   getTeachers: () => apiFetch('/users/teachers'),
   deleteUser: (id) => apiFetch(`/users/${id}`, { method: 'DELETE' }),
+
+  // createStudentAdmin: (data) => apiFetch('/students', { 
+  //   method: 'POST', 
+  //   body: JSON.stringify({ ...data, role: 'student' }) 
+  // }),
+  
+  // createTeacherAdmin: (data) => apiFetch('/teachers', { 
+  //   method: 'POST', 
+  //   body: JSON.stringify({ ...data, role: 'teacher' }) 
+  // })
 };
-
-

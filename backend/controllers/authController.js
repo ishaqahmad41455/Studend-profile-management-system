@@ -35,8 +35,7 @@ const register = async (req, res) => {
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
   } catch (error) {
-    console.error('Register error:', error);
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -77,8 +76,7 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -89,7 +87,7 @@ const getMe = async (req, res) => {
     const user = await User.findById(req.user.id).select('-password');
     res.json({ success: true, data: user });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 

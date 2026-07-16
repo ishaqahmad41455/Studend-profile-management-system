@@ -21,7 +21,7 @@ const getProfiles = async (req, res) => {
 
     res.json({ success: true, count: profiles.length, data: profiles });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -36,7 +36,7 @@ const getMyProfile = async (req, res) => {
     }
     res.json({ success: true, data: profile });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -53,7 +53,7 @@ const createProfile = async (req, res) => {
     const profile = await Profile.create({ ...req.body, user: req.user._id });
     res.status(201).json({ success: true, data: profile });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -79,7 +79,7 @@ const updateProfile = async (req, res) => {
 
     res.json({ success: true, data: profile });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -94,7 +94,7 @@ const deleteProfile = async (req, res) => {
     }
     res.json({ success: true, message: 'Profile deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 

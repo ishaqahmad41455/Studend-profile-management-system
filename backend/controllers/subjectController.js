@@ -9,7 +9,7 @@ const getSubjects = async (req, res) => {
       .populate('teacher', 'name email');
     res.json({ success: true, count: subjects.length, data: subjects });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -19,7 +19,7 @@ const createSubject = async (req, res) => {
     const subject = await Subject.create({ name, code, class: classId });
     res.status(201).json({ success: true, data: subject });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -34,7 +34,7 @@ const updateSubject = async (req, res) => {
     if (!subject) return res.status(404).json({ success: false, message: 'Subject not found' });
     res.json({ success: true, data: subject });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -44,7 +44,7 @@ const deleteSubject = async (req, res) => {
     if (!subject) return res.status(404).json({ success: false, message: 'Subject not found' });
     res.json({ success: true, message: 'Subject deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 

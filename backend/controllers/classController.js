@@ -7,7 +7,7 @@ const getClasses = async (req, res) => {
       .populate('subjects', 'name code');
     res.json({ success: true, count: classes.length, data: classes });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -19,7 +19,7 @@ const getClass = async (req, res) => {
     if (!cls) return res.status(404).json({ success: false, message: 'Class not found' });
     res.json({ success: true, data: cls });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -28,7 +28,7 @@ const createClass = async (req, res) => {
     const cls = await Class.create(req.body);
     res.status(201).json({ success: true, data: cls });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -41,7 +41,7 @@ const updateClass = async (req, res) => {
     if (!cls) return res.status(404).json({ success: false, message: 'Class not found' });
     res.json({ success: true, data: cls });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -51,7 +51,7 @@ const deleteClass = async (req, res) => {
     if (!cls) return res.status(404).json({ success: false, message: 'Class not found' });
     res.json({ success: true, message: 'Class deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 

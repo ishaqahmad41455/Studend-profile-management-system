@@ -25,7 +25,7 @@ const getStudents = async (req, res) => {
 
     res.json({ success: true, count: students.length, data: students });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -44,7 +44,7 @@ const getStudent = async (req, res) => {
 
     res.json({ success: true, data: student });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -75,7 +75,7 @@ const createStudent = async (req, res) => {
 
     res.status(201).json({ success: true, data: populatedStudent });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -98,7 +98,7 @@ const updateStudent = async (req, res) => {
 
     res.json({ success: true, data: student });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
@@ -118,7 +118,7 @@ const deleteStudent = async (req, res) => {
 
     res.json({ success: true, message: 'Student deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    handleControllerError(error, res);
   }
 };
 
