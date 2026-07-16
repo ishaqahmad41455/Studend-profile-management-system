@@ -99,46 +99,49 @@
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             const alertContainer = document.getElementById('alertContainer');
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
 
             if (password !== confirmPassword) {
+                showAlert('Login successful!', 'success', alertContainer);
                 showAlert('Passwords do not match', 'danger', alertContainer);
+                showAlert(data.message || 'Login failed!', 'danger', alertContainer);
                 return;
             }
 
             const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
                 password: password
-                // Note: studentId/class/phone are captured for future profile completion
-                // (after login, via Edit Profile) — the account itself is created here.
             };
-
-            const submitBtn = e.target.querySelector('button[type="submit"]');
 
             try {
                 setLoading(submitBtn, true, 'Registering...');
+
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
                 });
+
                 const data = await response.json();
 
-                if (response.ok) {
+                if (response.ok && data.success) {
                     showAlert('Registration successful! Redirecting to login...', 'success', alertContainer);
                     document.getElementById('registerForm').reset();
+                    submitBtn.disabled = true; // keep it disabled during the redirect wait
+
                     setTimeout(() => {
                         window.location.href = '../auth/login.html';
-                    }, 2000);
+                    }, 1800);
                 } else {
-                    showAlert(data.message || 'Registration failed', 'danger', alertContainer);
+                    showAlert(data.message || 'Registration failed. Please try again.', 'danger', alertContainer);
+                    setLoading(submitBtn, false);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Registration error:', error);
                 showAlert('Could not reach the server. Please check your connection and try again.', 'danger', alertContainer);
-            } finally {
                 setLoading(submitBtn, false);
-            }
             }
         });
     </script>
